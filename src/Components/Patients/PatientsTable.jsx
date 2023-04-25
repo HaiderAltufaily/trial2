@@ -145,7 +145,7 @@ export default function PatientsTable(props) {
       direction="column"
       w="100%"
       px="0px"
-      overflowX="scroll"
+      overflowX={{ base: "scroll", lg: "hidden" }}
       boxShadow={"softShadow"}
     >
       {/* <Flex px="25px" justify="space-between" mb="20px" align="center">

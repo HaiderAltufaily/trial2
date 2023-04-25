@@ -34,10 +34,10 @@ function PersonalDetails({ name, address, phoneNumber, gender, imageUrl }) {
         <Stack>
           <Text fontWeight={"normal"} fontSize={"lg"}>
             {" "}
-            حسين علي
+            {name}{" "}
           </Text>
           <Text dir="ltr" color="lightText">
-            +964 774 5004 846
+            +964 {phoneNumber}
           </Text>
         </Stack>
       </HStack>
