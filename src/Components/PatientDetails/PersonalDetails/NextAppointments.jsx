@@ -5,7 +5,7 @@ import { Appointment2 } from "../../../assets";
 function NextAppointment() {
   const appointments = [1, 2, 3, 4, 5];
   return (
-    <Stack>
+    <Stack fontSize={"lg"}>
       <HStack>
         <Appointment2 />
         <Text>الحجوزات القادمة</Text>

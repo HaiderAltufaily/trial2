@@ -21,7 +21,7 @@ function PersonalDetails({ name, address, phoneNumber, gender, imageUrl }) {
     },
   ];
   return (
-    <Stack>
+    <Stack fontSize={"lg"}>
       <HStack align={"center"}>
         <Avatar
           src={imageUrl}
@@ -41,14 +41,24 @@ function PersonalDetails({ name, address, phoneNumber, gender, imageUrl }) {
           </Text>
         </Stack>
       </HStack>
-      <Stack spacing="8px">
-        {details.map((detail) => (
-          <HStack key={detail.title}>
-            <Text color="lightText">{detail.title}:</Text>
-            <Text> {detail.content} </Text>
-          </HStack>
-        ))}
-      </Stack>
+      <HStack fontSize={"lg"}>
+        <Stack spacing="8px">
+          {details.map((detail) => (
+            <Stack key={detail.title}>
+              <Text color="lightText">{detail.title}:</Text>
+              {/* <Text> {detail.content} </Text> */}
+            </Stack>
+          ))}
+        </Stack>
+        <Stack>
+          {details.map((detail) => (
+            <Stack key={detail.title}>
+              {/* <Text color="lightText">{detail.title}:</Text> */}
+              <Text> {detail.content} </Text>
+            </Stack>
+          ))}
+        </Stack>
+      </HStack>
     </Stack>
   );
 }
