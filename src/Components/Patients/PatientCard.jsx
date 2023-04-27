@@ -8,7 +8,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
-import { ThreeDots } from "../../assets";
 import CardMenu from "./CardMenu";
 import { Link } from "react-router-dom";
 
@@ -18,7 +17,7 @@ function PatientCard({
   address,
   gender,
   imageUrl,
-  birthDay,
+  birthdate,
   id,
 }) {
   const details = [
@@ -33,7 +32,7 @@ function PatientCard({
     {
       title: "تاريخ الميلاد",
       //temporary
-      content: birthDay || "1992/7/2",
+      content: birthdate || "1992/7/2",
     },
     {
       title: "الملاحظات",
@@ -43,12 +42,16 @@ function PatientCard({
   return (
     <LinkBox
       as={Stack}
-      borderRadius={"md"}
+      borderRadius={"12px"}
       p="16px"
       bg="white "
-      border="1px solid #EFF2FA"
       boxShadow={"card"}
       spacing="8px"
+      position={"relative"}
+      _hover={{
+        bg: "veryLightGray",
+        border: "1px solid stroke",
+      }}
     >
       <HStack align={"flex-start"} justify={"space-between"}>
         <HStack align={"center"}>
@@ -60,10 +63,11 @@ function PatientCard({
             boxSize={"70px"}
             borderRadius={"28px"}
           />
+
           <Stack>
             <LinkOverlay as={Link} to={`/patients/${id}`}>
               {" "}
-              <Text fontFamily={"dinMedium"} fontSize={"lg"}>
+              <Text color="#4A5568" fontFamily={"dinMedium"} fontSize={"lg"}>
                 {" "}
                 {name}{" "}
               </Text>
@@ -73,7 +77,19 @@ function PatientCard({
             </Text>
           </Stack>
         </HStack>
-        <CardMenu />
+        <Box top="0" left="3" position={"absolute"}>
+          <CardMenu
+            patient={{
+              name,
+              address,
+              phoneNumber,
+              gender,
+              imageUrl,
+              birthdate,
+              id,
+            }}
+          />
+        </Box>
       </HStack>
 
       <HStack>
@@ -81,14 +97,12 @@ function PatientCard({
           {details.map((detail) => (
             <Stack key={detail.title}>
               <Text color="lightText">{detail.title}:</Text>
-              {/* <Text> {detail.content} </Text> */}
             </Stack>
           ))}
         </Stack>
         <Stack>
           {details.map((detail) => (
             <Stack key={detail.title}>
-              {/* <Text color="lightText">{detail.title}:</Text> */}
               <Text> {detail.content} </Text>
             </Stack>
           ))}

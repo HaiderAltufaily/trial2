@@ -11,7 +11,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import ImageUpload from "../../ImageUpload";
+import ImageUpload from "../Patients/ImageUpload";
 
 const steps = [
   { id: 1, label: "معلومات النظام" },
@@ -22,17 +22,7 @@ const steps = [
   { id: 6, label: "الدليل المحاسبي" },
 ];
 
-const CustomProgressBar = () => {
-  const [currentStep, setCurrentStep] = useState(1);
-
-  const handleNextStep = () => {
-    setCurrentStep((prevStep) => prevStep + 1);
-  };
-
-  const handlePrevStep = () => {
-    setCurrentStep((prevStep) => (prevStep > 1 ? prevStep - 1 : prevStep));
-  };
-
+const CustomProgressBar = ({ currentStep, setCurrentStep }) => {
   const activeColor = useColorModeValue("blue.500", "blue.300");
   const inactiveColor = useColorModeValue("gray.300", "gray.500");
 
@@ -67,14 +57,6 @@ const CustomProgressBar = () => {
               width="60px"
               textAlign="center"
             >
-              {/* <motion.div
-                initial={{ scale: 0 }}
-                animate={{
-                  scale: currentStep >= step.id ? 1 : 0,
-                  transition: { duration: 0.5, delay: 0.2 },
-                }}
-                exit={{ scale: 0, transition: { duration: 0.5 } }}
-              > */}
               <HStack
                 w="15px"
                 h="15px"
@@ -86,11 +68,7 @@ const CustomProgressBar = () => {
                 borderWidth="3px"
                 align={"center"}
                 justify={"center"}
-                // color="white"
-              >
-                {/* <Text>{step.id}</Text> */}
-              </HStack>
-              {/* </motion.div> */}
+              ></HStack>
               <Text
                 color={currentStep >= step.id ? activeColor : inactiveColor}
                 position="absolute"
@@ -104,7 +82,7 @@ const CustomProgressBar = () => {
         ))}
       </HStack>
 
-      <Flex justifyContent="space-between" mt="8">
+      {/* <Flex justifyContent="space-between" mt="8">
         <Button
           variant={"primary"}
           onClick={handlePrevStep}
@@ -120,7 +98,7 @@ const CustomProgressBar = () => {
         >
           {currentStep === steps.length ? "Finish" : "Next"}
         </Button>
-      </Flex>
+      </Flex> */}
     </Box>
   );
 };

@@ -8,6 +8,7 @@ import {
   MenuGroup,
   MenuOptionGroup,
   MenuDivider,
+  useDisclosure,
 } from "@chakra-ui/react";
 import {
   Appointment,
@@ -17,16 +18,30 @@ import {
   ThreeDots,
   Trash,
 } from "../../assets";
-function CardMenu() {
+import Alert from "../Shared/Alert";
+import { useDispatch } from "react-redux";
+import { deletePatient } from "../../store/slices/patientsSlice";
+import PatientFormModal from "./PatientFormModal";
+function CardMenu({ patient }) {
+  const dispatch = useDispatch();
+  function onDeletePatient() {
+    dispatch(deletePatient(patient.id));
+    onClose();
+  }
   return (
     <Menu>
       <MenuButton _hover={{ transform: "scale(1.2)" }} zIndex={100}>
         <ThreeDots />
       </MenuButton>
       <MenuList>
-        <MenuItem icon={<Trash fill="#3B4351" />}>حذف</MenuItem>
-        <MenuItem icon={<Edit stroke="#3B4351" />}>تعديل</MenuItem>
+        <Alert
+          body={"هل أنت متأكد من حذف المراجع؟"}
+          header="حذف المراجع"
+          onConfirm={onDeletePatient}
+          btnVariant={"menuItemDelete"}
+        />
 
+        <PatientFormModal btnVariant={"menuItemEdit"} patient={patient} />
         <MenuItem icon={<Print />}>طباعة</MenuItem>
         <MenuItem icon={<Appointment height="15px" width="15px" />}>
           المراجعات السابقة

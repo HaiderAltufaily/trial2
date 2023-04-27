@@ -7,6 +7,7 @@ function SingleAppointment() {
       w="100%"
       border="1px solid #F5F7FF"
       px="12px"
+      borderRadius={"12px"}
       py="2px"
       align="center"
     >

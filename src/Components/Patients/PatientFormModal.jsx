@@ -5,7 +5,6 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  ModalCloseButton,
   Button,
   useDisclosure,
   HStack,
@@ -14,24 +13,23 @@ import {
   Input,
   FormControl,
   FormLabel,
-  InputRightElement,
   InputGroup,
   InputLeftElement,
   Select,
-  CloseButton,
   Box,
   Divider,
   useToast,
+  CloseButton,
+  MenuItem,
 } from "@chakra-ui/react";
 
-import { Calender2, Plus, Calender, Close } from "../../assets";
-import ImageUpload from "../../ImageUpload";
+import { Calender2, Plus, Close, Edit2, Edit } from "../../assets";
+import ImageUpload from "./ImageUpload";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
-import { ArrowForwardIcon } from "@chakra-ui/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { addPatient } from "../../store/patientsSlice";
-function AddPatientModal() {
+import { addPatient, editPatient } from "../../store/slices/patientsSlice";
+function PatientFormModal({ patient, btnVariant }) {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [date, setDate] = useState(new Date());
@@ -43,6 +41,19 @@ function AddPatientModal() {
     gender: "ذكر",
     imageUrl: "",
   });
+  useEffect(() => {
+    if (patient) {
+      setNewPatient({
+        name: patient.name,
+        gender: patient.gender,
+        imageUrl: patient.imageUrl,
+        address: patient.address,
+        phoneNumber: patient.phoneNumber,
+      });
+      setDate(new Date(patient.birthdate));
+      setSelectedImage(patient.imageUrl);
+    }
+  }, [patient]);
   const dispatch = useDispatch();
   const propsConfigs = {
     dateNavBtnProps: {
@@ -84,8 +95,22 @@ function AddPatientModal() {
       [name]: value,
     }));
   }
-  function handleAddPatient() {
-    dispatch(addPatient(newPatient));
+
+  function handleAddPatient(e) {
+    //TODO: Implement react-hook-form or formik with YUP validations
+    e.preventDefault();
+    const birthdate = date.toISOString().split("T")[0].replaceAll("-", "/");
+    if (!patient) {
+      dispatch(addPatient({ ...newPatient, birthdate }));
+    } else if (patient) {
+      dispatch(
+        editPatient({
+          ...newPatient,
+          id: patient.id,
+          birthdate,
+        })
+      );
+    }
     toast({
       position: "top",
       duration: 2000,
@@ -99,7 +124,7 @@ function AddPatientModal() {
           color="white"
           p={3}
         >
-          تم اضافة المراجع
+          تم {!patient ? "إضافة" : "تعديل"} المراجع
         </Box>
       ),
     });
@@ -112,43 +137,74 @@ function AddPatientModal() {
     });
     onClose();
   }
+  function renderModalButton() {
+    if (btnVariant === "menuItemEdit") {
+      return (
+        <MenuItem onClick={onOpen} icon={<Edit stroke="#3B4351" />}>
+          تعديل
+        </MenuItem>
+      );
+    } else if (btnVariant === "edit") {
+      return (
+        <Button
+          onClick={onOpen}
+          variant={"secondary"}
+          leftIcon={
+            <HStack
+              align="center"
+              justify={"center"}
+              boxSize={"22px"}
+              borderRadius={"50%"}
+              bg="#7B61FF52"
+            >
+              <Edit2 />
+            </HStack>
+          }
+        >
+          تعديل
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          fontWeight={"400"}
+          textAlign={"center"}
+          variant={"primary"}
+          onClick={onOpen}
+        >
+          <HStack align="baseline">
+            <Plus />
+
+            <Text>مراجع </Text>
+          </HStack>
+        </Button>
+      );
+    }
+  }
   return (
     <>
-      <Button
-        fontFamily={"poppins"}
-        textAlign={"center"}
-        variant={"primary"}
-        onClick={onOpen}
-      >
-        <HStack>
-          <Plus />
-
-          <Text>مراجع </Text>
-        </HStack>
-      </Button>
+      {renderModalButton()}
 
       <Modal size="xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader as={HStack} justifyContent={"space-between"}>
-            <Box onClick={onClose} cursor={"pointer"}>
-              <Close width="20" height="20" />
-            </Box>
+            <CloseButton onClick={onClose} />
 
             <Text color="lightText" fontWeight={"400"}>
-              إضافة مراجع جديد
+              {patient ? "تعديل معلومات المراجع" : "إضافة مراجع جديد"}{" "}
             </Text>
           </ModalHeader>
           <Divider />
-          <ModalBody>
-            <Stack spacing="4">
-              <HStack justify={"flex-end"}>
-                <ImageUpload
-                  selectedFile={selectedImage}
-                  setSelectedFile={setSelectedImage}
-                />
-              </HStack>
-              <form>
+          <form onSubmit={handleAddPatient}>
+            <ModalBody>
+              <Stack spacing="4">
+                <HStack justify={"flex-end"}>
+                  <ImageUpload
+                    selectedFile={selectedImage}
+                    setSelectedFile={setSelectedImage}
+                  />
+                </HStack>
                 <Stack>
                   <HStack flexDir={"row-reverse"}>
                     <FormControl mx="4">
@@ -179,8 +235,6 @@ function AddPatientModal() {
                           name="date"
                           date={date}
                           onDateChange={setDate}
-
-                          //   onDateChange={setDate}
                         />
                       </InputGroup>
                     </FormControl>
@@ -189,13 +243,15 @@ function AddPatientModal() {
                     <FormControl mx="4">
                       <FormLabel textAlign={"right"}>الجنس</FormLabel>
                       <Select
+                        _focus={{
+                          border: "1px solid",
+                          borderColor: "primary",
+                        }}
                         textAlign={"right"}
                         size="lg"
                         value={newPatient.gender}
                         variant={"primary"}
                         name="gender"
-                        defaultValue={"ذكر"}
-                        // placeholder="ذكر"
                         boxShadow="sm"
                         onChange={handleInputChange}
                         border="1px solid #EFF4F8"
@@ -213,7 +269,6 @@ function AddPatientModal() {
                         <Input
                           value={newPatient.phoneNumber}
                           name="phoneNumber"
-                          //   flexBasis={"80%"}
                           size="lg"
                           variant={"primary"}
                           onChange={handleInputChange}
@@ -237,25 +292,25 @@ function AddPatientModal() {
                     </FormControl>
                   </HStack>
                 </Stack>
-              </form>
-            </Stack>
-          </ModalBody>
+              </Stack>
+            </ModalBody>
 
-          <ModalFooter justifyContent={"flex-start"}>
-            <Button
-              fontSize={"lg"}
-              fontWeight={"400"}
-              borderRadius={"8px"}
-              variant={"primary"}
-              onClick={handleAddPatient}
-            >
-              حفظ
-            </Button>
-          </ModalFooter>
+            <ModalFooter justifyContent={"flex-start"}>
+              <Button
+                fontSize={"lg"}
+                fontWeight={"400"}
+                borderRadius={"8px"}
+                variant={"primary"}
+                type="submit"
+              >
+                حفظ
+              </Button>
+            </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </>
   );
 }
 
-export default AddPatientModal;
+export default PatientFormModal;

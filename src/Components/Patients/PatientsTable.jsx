@@ -14,23 +14,15 @@ import {
   Stack,
   Box,
 } from "@chakra-ui/react";
-import React, { useMemo } from "react";
-import {
-  useGlobalFilter,
-  usePagination,
-  useRowSelect,
-  useSortBy,
-  useTable,
-} from "react-table";
+import React, { useEffect, useMemo } from "react";
+import { usePagination, useRowSelect, useSortBy, useTable } from "react-table";
 import { TableCheckbox } from "./TableCheckbox";
 import CardMenu from "./CardMenu";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import Alert from "../Shared/Alert";
+import { useDispatch } from "react-redux";
+import { deletePatient } from "../../store/slices/patientsSlice";
+import PatientFormModal from "./PatientFormModal";
 const columnsData = [
-  //   {
-  //     Header: "ت",
-  //     accessor: (d, i) => <div>{i + 1}</div>,
-  //   },
   {
     Header: "اسم المراجع",
     accessor: "name",
@@ -70,28 +62,34 @@ const columnsData = [
   },
   {
     Header: "settings",
-    Cell: () => (
-      <HStack textAlign={"center"}>
-        <Box>
-          <CardMenu />
-        </Box>
-      </HStack>
-    ),
+    Cell: ({ cell }) => {
+      return (
+        <HStack textAlign={"center"}>
+          <Box>
+            <CardMenu patient={cell.row.original} />
+          </Box>
+        </HStack>
+      );
+    },
   },
 ];
 
-export default function PatientsTable(props) {
-  const patients = useSelector((state) => state.patients.patients);
+export default function PatientsTable({ patients }) {
+  //   const patients = useSelector((state) => state.patients.patients);
+  const dispatch = useDispatch();
 
   const columns = useMemo(() => columnsData, [columnsData]);
   const data = useMemo(() => patients, [patients]);
-
+  useEffect(() => {}, []);
+  function onDeletePatients(patientsIds) {
+    patientsIds.map((id) => dispatch(deletePatient(id)));
+  }
   const tableInstance = useTable(
     {
       columns,
       data,
     },
-    useGlobalFilter,
+
     useSortBy,
     usePagination,
     useRowSelect,
@@ -99,8 +97,41 @@ export default function PatientsTable(props) {
       hooks.visibleColumns.push((columns) => [
         {
           id: "selection",
-          Header: ({ getToggleAllRowsSelectedProps }) => (
-            <TableCheckbox {...getToggleAllRowsSelectedProps()} />
+          Header: ({ getToggleAllRowsSelectedProps, selectedFlatRows }) => (
+            <HStack position="relative" py="2" align="center" spacing="6">
+              <TableCheckbox {...getToggleAllRowsSelectedProps()} />
+              {selectedFlatRows.length > 0 && (
+                <HStack
+                  spacing="4"
+                  fontFamily={"dinMedium"}
+                  fontWeight={"400"}
+                  fontSize={"lg"}
+                  color="textColor"
+                  position="absolute"
+                  w="25rem"
+                >
+                  <Text fontFamily={"din"}>
+                    {selectedFlatRows.length} عناصر محددة
+                  </Text>
+                  <Alert
+                    btnVariant={""}
+                    onConfirm={() =>
+                      onDeletePatients(
+                        selectedFlatRows.map((p) => p.original.id)
+                      )
+                    }
+                    body={"هل أنت متأكد من حذف المراجع؟"}
+                    header="حذف المراجع"
+                  />
+                  {selectedFlatRows.length === 1 && (
+                    <PatientFormModal
+                      btnVariant={"edit"}
+                      patient={selectedFlatRows[0].original}
+                    />
+                  )}
+                </HStack>
+              )}
+            </HStack>
           ),
           Cell: ({ row }) => (
             <TableCheckbox
@@ -124,10 +155,7 @@ export default function PatientsTable(props) {
     selectedFlatRows,
   } = tableInstance;
   initialState.pageSize = 12;
-
-  const textColor = useColorModeValue("secondaryGray.900", "white");
   const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
-  const navigate = useNavigate();
   return (
     <Flex
       css={{
@@ -145,45 +173,59 @@ export default function PatientsTable(props) {
       direction="column"
       w="100%"
       px="0px"
+      maxH="68vh"
       overflowX={{ base: "scroll", lg: "hidden" }}
       boxShadow={"softShadow"}
     >
-      {/* <Flex px="25px" justify="space-between" mb="20px" align="center">
-        <Text fontSize="22px" lineHeight="100%">
-          Check Table
-        </Text>
-        {/* <Menu /> */}
-      {/* </Flex> */}
       <Table
-        fontFamily={"dinMedium"}
+        fontFamily={"din"}
         {...getTableProps()}
         bg="white"
         variant="simple"
         mb="24px"
         color="#4A5568"
       >
-        <Thead>
+        <Thead borderBottom={"1px solid"} borderColor={borderColor}>
           {headerGroups.map((headerGroup, index) => (
             <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
-              {headerGroup.headers.map(
-                (column, index) =>
-                  column.Header !== "settings" && (
-                    <Th
-                      {...column.getHeaderProps(column.getSortByToggleProps())}
-                      pe="10px"
-                      key={index}
-                      borderColor={borderColor}
-                    >
-                      <Flex
-                        justify="space-between"
-                        align="center"
-                        color="lightText"
-                        fontSize={{ sm: "10px", lg: "14px" }}
+              {headerGroup.headers.map((column, index) =>
+                selectedFlatRows.length > 0
+                  ? column.id === "selection" && (
+                      <Th
+                        {...column.getHeaderProps(
+                          column.getSortByToggleProps()
+                        )}
+                        //   pe="10px"
+                        key={index}
                       >
-                        {column.render("Header")}
-                      </Flex>
-                    </Th>
-                  )
+                        <Flex
+                          justify="space-between"
+                          align="center"
+                          color="lightText"
+                          fontSize={{ sm: "10px", lg: "14px" }}
+                        >
+                          {column.render("Header")}
+                        </Flex>
+                      </Th>
+                    )
+                  : column.Header !== "settings" && (
+                      <Th
+                        {...column.getHeaderProps(
+                          column.getSortByToggleProps()
+                        )}
+                        //   pe="10px"
+                        key={index}
+                      >
+                        <Flex
+                          justify="space-between"
+                          align="center"
+                          color="lightText"
+                          fontSize={{ sm: "10px", lg: "14px" }}
+                        >
+                          {column.render("Header")}
+                        </Flex>
+                      </Th>
+                    )
               )}
             </Tr>
           ))}
@@ -193,55 +235,34 @@ export default function PatientsTable(props) {
             prepareRow(row);
 
             return (
-              <Tr {...row.getRowProps()} key={index}>
+              <Tr
+                bg={row.isSelected ? "veryLightGray" : "white"}
+                _hover={{
+                  bg: "veryLightGray",
+                }}
+                {...row.getRowProps()}
+                key={index}
+              >
                 {row.cells.map((cell, index) => {
-                  let data = "";
-                  if (cell.column.id === "selection") {
-                    data = cell.render("Cell");
-                  }
-                  if (cell.column.Header === "ت") {
-                    data = cell.render("Cell");
-                  }
-                  if (cell.column.Header === "اسم المراجع") {
-                    data = (
-                      <Flex align="center">
-                        {/* <Checkbox
-                          defaultChecked={cell.value[1]}
-                          //   colorScheme="brandScheme"
-                        //   me="10px"
-                        /> */}
-                        {cell.render("Cell")}
-                      </Flex>
-                    );
-                  } else if (cell.column.Header === "الرقم") {
-                    data = (
-                      //   <Flex align="flex-start">
-                      <Text
-                        fontSize="16px"
-                        // me="10px"
-                      >
-                        {cell.value}
-                      </Text>
-                      //   </Flex>
-                    );
-                  } else if (cell.column.Header === "العنوان") {
-                    data = <Text fontSize={"16px"}>{cell.value}</Text>;
-                  } else if (cell.column.Header === "الجنس") {
-                    data = <Text fontSize={"16px"}>{cell.value}</Text>;
-                  }
-                  if (cell.column.Header === "settings") {
-                    data = cell.render("Cell");
-                  }
                   return (
                     <Td
                       {...cell.getCellProps()}
                       key={index}
-                      bg={cell.row.isSelected ? "lightPurple" : "white"}
                       fontSize={{ sm: "14px" }}
                       minW={{ sm: "150px", md: "200px", lg: "auto" }}
                       borderColor="transparent"
+                      borderRight={
+                        cell.row.isSelected &&
+                        cell.column.id === "selection" &&
+                        "5px solid"
+                      }
+                      borderRightColor={
+                        cell.row.isSelected &&
+                        cell.column.id === "selection" &&
+                        "primary"
+                      }
                     >
-                      {data}
+                      <Text fontSize={"16px"}>{cell.render("Cell")}</Text>
                     </Td>
                   );
                 })}

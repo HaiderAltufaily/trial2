@@ -27,7 +27,7 @@ const colors = {
 
   green: "#8FDC7C",
   green20: "rgba(143, 220, 124, 0.2)",
-  red: "#FA5F55",
+  // red: "#FA5F55",
   red15: "rgba(238, 133, 133, 0.15)",
   textColor: "#3B4351",
   mediumGray: "#7E8DA7",
@@ -51,7 +51,15 @@ const components = {
           bg: "#4222de",
         },
       },
-      secondary: {},
+      secondary: {
+        bg: "#ffffff",
+        border: "2px solid ",
+        borderColor: "stroke",
+        fontWeight: "400",
+        _hover: {
+          bg: "veryLightGray",
+        },
+      },
     },
   },
 
@@ -73,10 +81,10 @@ const components = {
           border: "1px solid #EFF4F8",
           borderRadius: "12px",
           _placeholder: { color: "lightText" },
-          // _focus: {
-          //   border: "1px solid",
-          //   borderColor: "primary.lighter",
-          // },
+          _focus: {
+            border: "1px solid",
+            borderColor: "primary",
+          },
         },
       },
       error: {

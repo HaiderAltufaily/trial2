@@ -12,8 +12,8 @@ export const TableCheckbox = React.forwardRef(
     return (
       <>
         <Checkbox
-          variant="circular"
           borderRadius={"20px"}
+          bg={checked && "primary"}
           isChecked={checked}
           ref={resolvedRef}
           {...rest}

@@ -5,6 +5,7 @@
     "phoneNumber": "7745004846",
     "address": "بغداد",
     "gender": "أنثى",
+    "birthdate": "1995/02/21",
     "imageUrl": "https://randomuser.me/api/portraits/women/1.jpg"
   },
   {
@@ -13,6 +14,7 @@
     "phoneNumber": "7745004846",
     "address": "بغداد",
     "gender": "ذكر",
+    "birthdate": "1992/07/15",
     "imageUrl": "https://randomuser.me/api/portraits/men/2.jpg"
   },
   {
@@ -21,6 +23,7 @@
     "phoneNumber": "7745004846",
     "address": "الموصل",
     "gender": "أنثى",
+    "birthdate": "1998/10/31",
     "imageUrl": "https://randomuser.me/api/portraits/women/3.jpg"
   },
   {
@@ -29,6 +32,7 @@
     "phoneNumber": "7745004846",
     "address": "النجف",
     "gender": "ذكر",
+    "birthdate": "1987/12/05",
     "imageUrl": "https://randomuser.me/api/portraits/men/4.jpg"
   },
   {
@@ -37,6 +41,7 @@
     "phoneNumber": "7745004846",
     "address": "كربلاء",
     "gender": "أنثى",
+    "birthdate": "1994/06/18",
     "imageUrl": "https://randomuser.me/api/portraits/women/5.jpg"
   },
   {
@@ -45,6 +50,7 @@
     "phoneNumber": "7745004846",
     "address": "الديوانية",
     "gender": "ذكر",
+    "birthdate": "1991/11/24",
     "imageUrl": "https://randomuser.me/api/portraits/men/6.jpg"
   },
   {
@@ -53,6 +59,7 @@
     "phoneNumber": "7745004846",
     "address": "البصرة",
     "gender": "أنثى",
+    "birthdate": "1989/03/10",
     "imageUrl": "https://randomuser.me/api/portraits/women/7.jpg"
   },
   {
@@ -61,6 +68,7 @@
     "phoneNumber": "7745004846",
     "address": "الناصرية",
     "gender": "ذكر",
+    "birthdate": "1984/09/03",
     "imageUrl": "https://randomuser.me/api/portraits/men/8.jpg"
   },
   {
@@ -69,6 +77,7 @@
     "phoneNumber": "7745004846",
     "address": "أربيل",
     "gender": "أنثى",
+    "birthdate": "1997/05/29",
     "imageUrl": "https://randomuser.me/api/portraits/women/9.jpg"
   },
   {
@@ -77,6 +86,8 @@
     "phoneNumber": "7745004846",
     "address": "السليمانية",
     "gender": "ذكر",
+    "birthdate": "1997/05/29",
+
     "imageUrl": "https://randomuser.me/api/portraits/men/10.jpg"
   },
   {
@@ -84,6 +95,8 @@
     "name": "سمية عبدالله",
     "phoneNumber": "7745004846",
     "address": "دهوك",
+    "birthdate": "1997/05/29",
+
     "gender": "أنثى",
     "imageUrl": "https://randomuser.me/api/portraits/women/11.jpg"
   }

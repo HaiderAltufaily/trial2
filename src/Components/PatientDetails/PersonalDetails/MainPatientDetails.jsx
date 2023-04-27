@@ -4,6 +4,7 @@ import PersonalDetails from "./PersonalDetails";
 import NextAppointment from "./NextAppointments";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import AssociatedDocuments from "./AssociatedDocuments";
 function MainPatientDetails() {
   const { id } = useParams();
 
@@ -13,6 +14,7 @@ function MainPatientDetails() {
     <Stack minW="38%" spacing="44px" mx="2" p="16px" bg="white">
       <PersonalDetails {...currentPatient} />
       <NextAppointment {...currentPatient} />
+      <AssociatedDocuments />
     </Stack>
   );
 }

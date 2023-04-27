@@ -46,14 +46,12 @@ function PersonalDetails({ name, address, phoneNumber, gender, imageUrl }) {
           {details.map((detail) => (
             <Stack key={detail.title}>
               <Text color="lightText">{detail.title}:</Text>
-              {/* <Text> {detail.content} </Text> */}
             </Stack>
           ))}
         </Stack>
         <Stack>
           {details.map((detail) => (
             <Stack key={detail.title}>
-              {/* <Text color="lightText">{detail.title}:</Text> */}
               <Text> {detail.content} </Text>
             </Stack>
           ))}

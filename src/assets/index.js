@@ -28,6 +28,12 @@ import { ReactComponent as UploadIcon } from "./upload.svg";
 import { ReactComponent as Profile } from "./profile.svg";
 import { ReactComponent as Camera } from "./camera.svg";
 import { ReactComponent as Close } from "./close2.svg";
+import { ReactComponent as TrashFilled } from "./trashFilled.svg";
+import { ReactComponent as Edit2 } from "./edit2.svg";
+import { ReactComponent as UpArrow } from "./upArrow.svg";
+import { ReactComponent as FilterIcon } from "./filter.svg";
+import { ReactComponent as DocumentIcon } from "./file.svg";
+import { ReactComponent as DocumentIcon2 } from "./file2.svg";
 export {
   Stethoscope,
   Finance,
@@ -59,4 +65,10 @@ export {
   Profile,
   Camera,
   Close,
+  TrashFilled,
+  Edit2,
+  UpArrow,
+  FilterIcon,
+  DocumentIcon,
+  DocumentIcon2,
 };
